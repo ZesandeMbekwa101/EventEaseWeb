@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Venues";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Venues</h1>
+</div>
+
+<!-- Search Box -->
+<div class="content-card mb-3">
+    <div style="padding:20px;">
+        <input type="text" id="searchEvent" class="form-control"
+               placeholder="🔍 Search by name or venue ID..."
+               onkeyup="filterEvents()">
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="content-card-header">
+        <h2>All Venues</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table" id="venueTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Capacity</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="venue-row">
+                    <td>1</td>
+                    <td>Main Hall</td>
+                    <td>Downtown</td>
+                    <td>200</td>
+                    <td><img src="https://via.placeholder.com/50" alt="Venue Image"></td>
+                </tr>
+                <tr class="venue-row">
+                    <td>2</td>
+                    <td>Conference Room</td>
+                    <td>Uptown</td>
+                    <td>50</td>
+                    <td><img src="https://via.placeholder.com/50" alt="Venue Image"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function filterVenues() {
+        var input = document.getElementById("searchVenue").value.toUpperCase();
+        var rows = document.getElementById("venueTable").getElementsByClassName("venue-row");
+        for (var i = 0; i < rows.length; i++) {
+            var name = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
+            var location = rows[i].getElementsByTagName("td")[2].textContent.toUpperCase();
+            rows[i].style.display = (name.includes(input) || location.includes(input)) ? "" : "none";
+        }
+    }
+</script>

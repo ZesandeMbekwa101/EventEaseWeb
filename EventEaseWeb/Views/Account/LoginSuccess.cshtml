@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Login Successful";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Successful - Derek's Auto Repair</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body class="auth-body">
+    <div class="auth-container">
+        <div class="success-card">
+            <h1 class="success-title">Login Successful</h1>
+            <p class="success-message">
+                Welcome back, <strong>NAME OF CUSTOMER</strong>! You have successfully logged into IN.
+                You can now access the main dashboard or manage user accounts AND BOOK A SERVICE.
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-success-home">home page</a>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

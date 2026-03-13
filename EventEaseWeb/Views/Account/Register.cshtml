@@ -1,0 +1,126 @@
+﻿@model EventEaseWeb.Models.UserViewModel
+
+@{
+
+    ViewData["Title"] = "Register";
+    Layout = "_LayoutNoFooter";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #6C3CE7 0%, #8B5CF6 100%); padding: 2rem;">
+                    <h3 class="mb-0 text-center">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-controller="Account" asp-action="Register" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+
+                        <div class="mb-4">
+                            <label asp-for="FirstName" class="form-label fw-bold">
+                                <i class="fas fa-user me-2 text-primary"></i>First Name
+                            </label>
+                            <input asp-for="FirstName" class="form-control form-control-lg" placeholder="Enter your first name" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="LastName" class="form-label fw-bold">
+                                <i class="fas fa-user me-2 text-primary"></i>Last Name
+                            </label>
+                            <input asp-for="LastName" class="form-control form-control-lg" placeholder="Enter your last name" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-bold">
+                                <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+                            </label>
+                            <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-bold">
+                                <i class="fas fa-lock me-2 text-primary"></i>Password
+                            </label>
+                            <input asp-for="Password" class="form-control form-control-lg" placeholder="Create a password (min 6 characters)" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-bold">
+                                <i class="fas fa-lock me-2 text-primary"></i>Confirm Password
+                            </label>
+                            <input asp-for="ConfirmPassword" class="form-control form-control-lg" placeholder="Re-enter your password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #6C3CE7 0%, #8B5CF6 100%); border: none; padding: 15px;">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Already have an account?
+                            <a asp-controller="Account" asp-action="Login" class="text-decoration-none fw-bold" style="color: #6C3CE7;">
+                                Login here <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    .form-control {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #6C3CE7;
+            box-shadow: 0 0 0 0.2rem rgba(108, 60, 231, 0.25);
+        }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 60, 231, 0.3);
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+</style>

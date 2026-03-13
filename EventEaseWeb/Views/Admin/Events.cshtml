@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Events";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Events</h1>
+</div>
+
+<div class="content-card mb-3">
+    <div style="padding:20px;">
+        <input type="text" id="searchEvent" class="form-control"
+               placeholder="🔍 Search by name or venue ID..."
+               onkeyup="filterEvents()">
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="content-card-header">
+        <h2>All Events</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table" id="eventTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Venue ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="event-row">
+                    <td>1</td>
+                    <td>Annual Meeting</td>
+                    <td>2026-03-20</td>
+                    <td>Company-wide meeting</td>
+                    <td>1</td>
+                </tr>
+                <tr class="event-row">
+                    <td>2</td>
+                    <td>Training Workshop</td>
+                    <td>2026-04-05</td>
+                    <td>Staff skill development</td>
+                    <td>2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function filterEvents() {
+        var input = document.getElementById("searchEvent").value.toUpperCase();
+        var rows = document.getElementById("eventTable").getElementsByClassName("event-row");
+        for (var i = 0; i < rows.length; i++) {
+            var name = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
+            var venue = rows[i].getElementsByTagName("td")[4].textContent.toUpperCase();
+            rows[i].style.display = (name.includes(input) || venue.includes(input)) ? "" : "none";
+        }
+    }
+</script>
