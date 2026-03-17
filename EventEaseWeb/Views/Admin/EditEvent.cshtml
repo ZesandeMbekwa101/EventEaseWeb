@@ -1,0 +1,78 @@
+﻿@model EventEaseWeb.Models.EventModel
+@{
+    ViewData["Title"] = "Edit Event";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Edit Event</h1>
+</div>
+
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>Event Information</h2>
+    </div>
+    <form asp-action="EditEvent" method="post">
+        <input type="hidden" asp-for="EventID" />
+
+        <div class="mb-3">
+            <label asp-for="EventName" class="form-label"></label>
+            <input asp-for="EventName" class="form-control" />
+            <span asp-validation-for="EventName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EventDate" class="form-label"></label>
+            <input asp-for="EventDate" type="date" class="form-control" />
+            <span asp-validation-for="EventDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="VenueID" class="form-label">Select Venue</label>
+            <select asp-for="VenueID" class="form-control" asp-items="@(new SelectList(ViewBag.Venues, "VenueID", "VenueName", Model.VenueID))">
+                <option value="">-- Select Venue --</option>
+            </select>
+            <span asp-validation-for="VenueID" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-action btn-complete">
+            <i class="fas fa-save me-2"></i> Save Changes
+        </button>
+        <a href="@Url.Action("EventDetails", "Admin", new { id = Model.EventID })" class="btn-action btn-view ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-view {
+        background-color: #1976D2;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+
+    .ms-2 {
+        margin-left: 8px;
+    }
+</style>

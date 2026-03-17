@@ -1,60 +1,112 @@
-﻿@{
+﻿@model List<EventEaseWeb.Models.EventModel>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Events";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var username = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var isLoggedIn = !string.IsNullOrEmpty(username);
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.querySelector('.alert-success');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s, max-height 0.5s';
+                alert.style.opacity = '0';
+                alert.style.maxHeight = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 4000);
+    </script>
 }
 
 <div class="admin-header">
     <h1>Events</h1>
 </div>
 
-<div class="content-card mb-3">
-    <div style="padding:20px;">
-        <input type="text" id="searchEvent" class="form-control"
-               placeholder="🔍 Search by name or venue ID..."
-               onkeyup="filterEvents()">
-    </div>
-</div>
+@if (isLoggedIn)
+{
+    <div class="mt-3 mb-3"> 
+        <a href="@Url.Action("AddEvent", "Admin")" 
+        class="btn-action btn-complete">
+        <i class="fas fa-plus me-2"></i> Add Event </a> </div>
 
-<div class="content-card">
-    <div class="content-card-header">
-        <h2>All Events</h2>
+    <!-- Search Box -->
+    <div class="content-card mb-3">
+        <div style="padding:20px;">
+            <input type="text" id="searchEvent" class="form-control"
+                   placeholder="🔍 Search by name or venue..."
+                   onkeyup="filterEvents()">
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="admin-table" id="eventTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Venue ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="event-row">
-                    <td>1</td>
-                    <td>Annual Meeting</td>
-                    <td>2026-03-20</td>
-                    <td>Company-wide meeting</td>
-                    <td>1</td>
-                </tr>
-                <tr class="event-row">
-                    <td>2</td>
-                    <td>Training Workshop</td>
-                    <td>2026-04-05</td>
-                    <td>Staff skill development</td>
-                    <td>2</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="content-card">
+        <div class="content-card-header">
+            <h2>All Events</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="admin-table" id="eventTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Venue</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var ev in Model)
+                        {
+                            <tr class="event-row">
+                                <td>#@ev.EventID</td>
+                                <td>@ev.EventName</td>
+                                <td>@ev.EventDate.ToString("yyyy-MM-dd")</td>
+                                <td>@ev.Description</td>
+                                <td>@ev.Venue?.VenueName</td>
+                                <td>
+                                    <a href="@Url.Action("EventDetails", "Admin", new { id = ev.EventID })"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No events found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="text-center mt-4">
+        <p>Please log in to view events.</p>
+    </div>
+}
 
 <script>
     function filterEvents() {
         var input = document.getElementById("searchEvent").value.toUpperCase();
         var rows = document.getElementById("eventTable").getElementsByClassName("event-row");
+
         for (var i = 0; i < rows.length; i++) {
             var name = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
             var venue = rows[i].getElementsByTagName("td")[4].textContent.toUpperCase();
@@ -62,3 +114,25 @@
         }
     }
 </script>
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background-color: #1976D2;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>

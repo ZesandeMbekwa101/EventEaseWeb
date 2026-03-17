@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Derek's Auto Repair Admin</title>
+    <title>@ViewData["Title"] - EvemtEase.org.za</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -28,7 +28,7 @@
 
         .admin-sidebar {
             width: 280px;
-            background-color: #fff;
+            background: #fff;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             position: fixed;
             height: 100vh;
@@ -116,15 +116,9 @@
             margin-bottom: 30px;
         }
 
-        .stat-card {
+        .stat-card, .content-card {
             background: white;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .content-card {
-            background: white;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
@@ -149,63 +143,83 @@
                 padding: 15px;
                 border-bottom: 1px solid #eee;
             }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border-left: 4px solid #2E7D32;
+        }
+
+        .alert-danger {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #C62828;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="admin-container">
 
         <!-- Sidebar -->
         <aside class="admin-sidebar">
-
             <div class="admin-profile">
-                <div class="admin-avatar"></div>
-                <div class="admin-name">Admin</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-avatar">
+                    @(ViewContext.HttpContext.Session.GetString("UserName")?.Substring(0, 1).ToUpper() ?? "A")
+                </div>
+                <div class="admin-name">
+                    @ViewContext.HttpContext.Session.GetString("UserName")
+                </div>
+                <div class="admin-role">
+                    @ViewContext.HttpContext.Session.GetString("UserRole") 
+                </div>
             </div>
 
-            <nav class="admin-menu">
+          <nav class="admin-menu">
+    <a href="@Url.Action("Dashboard", "Admin")" class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+        <i class="fas fa-home"></i> Dashboard
+    </a>
 
-                <a href="@Url.Action("Dashboard", "Admin")" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
+    <a href="@Url.Action("Clients", "Admin")" class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Clients" ? "active" : "")">
+        <i class="fas fa-user-friends"></i> Clients
+    </a>
 
-                <a href="@Url.Action("Clients", "Admin")" class="menu-item">
-                    <i class="fas fa-calendar"></i>
-                    Clients
-                </a>
+    <a href="@Url.Action("Events", "Admin")" class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Events" ? "active" : "")">
+        <i class="fas fa-calendar-alt"></i> Events
+    </a>
 
-                <a href="@Url.Action("Events", "Admin")" class="menu-item">
-                    <i class="fas fa-tools"></i>
-                    Events
-                </a> 
+    <a href="@Url.Action("Venues", "Admin")" class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Venues" ? "active" : "")">
+        <i class="fas fa-map-marker-alt"></i> Venue
+    </a>
 
-                <a href="@Url.Action("Venues", "Admin")" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    Venue
-                </a>
-                <a href="@Url.Action("Bookings", "Admin")" class="menu-item">
-                    <i class="fas fa-cog"></i>
-                    Booking
-                </a>
+    <a href="@Url.Action("Bookings", "Admin")" class="menu-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Bookings" ? "active" : "")">
+        <i class="fas fa-book-open"></i> Booking
+    </a>
 
-                <a href="@Url.Action("Logout", "Account")" class="menu-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
-
-            </nav>
-
+    <a href="@Url.Action("Logout", "Account")" class="menu-item">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</nav>
         </aside>
 
         <!-- Main Content -->
         <main class="admin-main">
+
+           
+
             @RenderBody()
         </main>
 
     </div>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

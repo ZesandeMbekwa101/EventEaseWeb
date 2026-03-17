@@ -1,0 +1,81 @@
+﻿@model EventEaseWeb.Models.VenueModel
+@{
+    ViewData["Title"] = "Edit Venue";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Edit Venue</h1>
+</div>
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>Booking Information</h2>
+    </div>
+
+    <form asp-action="EditVenue" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="VenueID" />
+
+        <div class="mb-3">
+            <label asp-for="VenueName" class="form-label"></label>
+            <input asp-for="VenueName" class="form-control" />
+            <span asp-validation-for="VenueName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Capacity" class="form-label"></label>
+            <input asp-for="Capacity" type="number" class="form-control" />
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Image" class="form-label">Image URL</label>
+            <input asp-for="Image" class="form-control" />
+            <span asp-validation-for="Image" class="text-danger"></span>
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Model.Image" alt="Venue Image" style="width:100px; height:100px; margin-top:10px;">
+            }
+        </div>
+
+        <button type="submit" class="btn-action btn-complete">
+            <i class="fas fa-save me-2"></i> Save Changes
+        </button>
+
+        <a href="@Url.Action("Venues", "Admin")" class="btn-action btn-view ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-view {
+        background-color: #1976D2;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+
+    .ms-2 {
+        margin-left: 8px;
+    }
+</style>

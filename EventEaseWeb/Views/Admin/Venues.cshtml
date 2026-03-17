@@ -1,61 +1,117 @@
-﻿@{
+﻿@model List<EventEaseWeb.Models.VenueModel>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Venues";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var username = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var isLoggedIn = !string.IsNullOrEmpty(username);
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.querySelector('.alert-success');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s, max-height 0.5s';
+                alert.style.opacity = '0';
+                alert.style.maxHeight = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 4000);
+    </script>
 }
 
 <div class="admin-header">
     <h1>Venues</h1>
 </div>
 
-<!-- Search Box -->
-<div class="content-card mb-3">
-    <div style="padding:20px;">
-        <input type="text" id="searchEvent" class="form-control"
-               placeholder="🔍 Search by name or venue ID..."
-               onkeyup="filterEvents()">
-    </div>
-</div>
+@if (isLoggedIn)
+{
+    <div class="mt-3 mb-3"> 
+        <a href="@Url.Action("AddVenue", "Admin")"
+        class="btn-action btn-complete"> 
+        <i class="fas fa-plus me-2"></i> Add Venue </a> </div>
 
-<div class="content-card">
-    <div class="content-card-header">
-        <h2>All Venues</h2>
+    <!-- Search Box -->
+    <div class="content-card mb-3">
+        <div style="padding:20px;">
+            <input type="text" id="searchVenue" class="form-control"
+                   placeholder="🔍 Search by name or location..."
+                   onkeyup="filterVenues()">
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="admin-table" id="venueTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Capacity</th>
-                    <th>Image</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="venue-row">
-                    <td>1</td>
-                    <td>Main Hall</td>
-                    <td>Downtown</td>
-                    <td>200</td>
-                    <td><img src="https://via.placeholder.com/50" alt="Venue Image"></td>
-                </tr>
-                <tr class="venue-row">
-                    <td>2</td>
-                    <td>Conference Room</td>
-                    <td>Uptown</td>
-                    <td>50</td>
-                    <td><img src="https://via.placeholder.com/50" alt="Venue Image"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="content-card">
+        <div class="content-card-header">
+            <h2>All Venues</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="admin-table" id="venueTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Capacity</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var venue in Model)
+                        {
+                            <tr class="venue-row">
+                                <td>#@venue.VenueID</td>
+                                <td>@venue.VenueName</td>
+                                <td>@venue.Location</td>
+                                <td>@venue.Capacity</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(venue.Image))
+                                    {
+                                        <img src="@venue.Image" alt="Venue Image" style="width:50px;height:50px;">
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("VenueDetails", "Admin", new { id = venue.VenueID })"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No venues found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="text-center mt-4">
+        <p>Please log in to view venues.</p>
+    </div>
+}
 
 <script>
     function filterVenues() {
         var input = document.getElementById("searchVenue").value.toUpperCase();
         var rows = document.getElementById("venueTable").getElementsByClassName("venue-row");
+
         for (var i = 0; i < rows.length; i++) {
             var name = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
             var location = rows[i].getElementsByTagName("td")[2].textContent.toUpperCase();
@@ -63,3 +119,26 @@
         }
     }
 </script>
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background-color: #1976D2;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>

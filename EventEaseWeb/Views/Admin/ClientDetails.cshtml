@@ -1,0 +1,67 @@
+﻿@model EventEaseWeb.Models.UserModel
+@{
+    ViewData["Title"] = "Client Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Client Details</h1>
+</div>
+
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>@Model.FirstName @Model.LastName</h2>
+    </div>
+    <div style="padding: 25px;">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Phone:</strong> @Model.Password</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("EditClient", "Admin", new { id = Model.UserID })"
+   class="btn-action btn-complete ms-2">
+    <i class="fas fa-edit me-2"></i> Update
+</a>
+
+<form asp-action="DeleteClient" asp-controller="Admin" method="post" style="display:inline;">
+    <input type="hidden" name="id" value="@Model.UserID" />
+    <button type="submit" class="btn-action btn-danger ms-2"
+            onclick="return confirm('Are you sure you want to delete this client?');">
+        <i class="fas fa-trash me-2"></i> Delete
+    </button>
+</form>
+
+<div class="mt-3">
+    <a href="@Url.Action("Clients", "Admin")" class="btn-action btn-view">
+        <i class="fas fa-arrow-left me-2"></i> Back to Clients
+    </a>
+</div>
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-danger {
+        background-color: #C62828;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .ms-2 {
+        margin-left: 8px;
+    }
+</style>

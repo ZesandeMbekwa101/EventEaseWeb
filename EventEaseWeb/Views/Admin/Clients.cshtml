@@ -1,106 +1,116 @@
-﻿@{
+﻿@model List<EventEaseWeb.Models.UserModel>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Clients";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var username = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var isLoggedIn = !string.IsNullOrEmpty(username);
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.querySelector('.alert-success');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s, max-height 0.5s';
+                alert.style.opacity = '0';
+                alert.style.maxHeight = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 4000);
+    </script>
 }
 
 <div class="admin-header">
     <h1>Clients</h1>
 </div>
 
-<!-- Search Box -->
-<div class="content-card mb-3">
-    <div style="padding: 20px;">
-        <div class="row">
-            <div class="col-md-6">
-                <input type="text" id="searchInput" class="form-control"
-                       placeholder="🔍 Search by name, email, or phone..."
-                       onkeyup="filterCustomers()">
-            </div>
+@if (isLoggedIn)
+{
+    <div class="mt-3 mt-3"> 
+        <a href="@Url.Action("AddClient", "Admin")" 
+        class="btn-action btn-complete">
+        <i class="fas fa-plus me-2"></i> Add Client </a> </div>
+
+    <!-- Search Box -->
+   
+     <div class="content-card mb-3">
+        <div style="padding:20px;">
+            <input type="text" id="searchInput" class="form-control"
+                   placeholder="🔍 Search by name, email, or phone..."
+                   onkeyup="filterCustomers()">
         </div>
     </div>
-</div>
 
-<div class="content-card">
-    <div class="content-card-header">
-        <h2>All Clients</h2>
+    <div class="content-card">
+        <div class="content-card-header">
+            <h2>All Clients</h2>
+        </div>
+
+        <div class="table-responsive">
+            <table class="admin-table" id="customersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var client in Model)
+                        {
+                            <tr class="customer-row">
+                                <td>#@client.UserID</td>
+                                <td class="customer-name">@client.FirstName @client.LastName</td>
+                                <td class="customer-email">@client.Email</td>
+                                <td>@client.Role</td>
+                                <td class="customer-phone">@client.Password</td>
+                                <td>
+                                    <a href="@Url.Action("ClientDetails", "Admin", new { id = client.UserID })"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No clients found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <div class="table-responsive">
-        <table class="admin-table" id="customersTable">
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Total Bookings</th>
-                    <th>Member Since</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <tr class="customer-row">
-                    <td>#1</td>
-                    <td class="customer-name">John Smith</td>
-                    <td class="customer-email">john@email.com</td>
-                    <td class="customer-phone">0712345678</td>
-                    <td>3</td>
-                    <td>Jan 15, 2024</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                </tr>
-
-                <tr class="customer-row">
-                    <td>#2</td>
-                    <td class="customer-name">Sarah Johnson</td>
-                    <td class="customer-email">sarah@email.com</td>
-                    <td class="customer-phone">0723456789</td>
-                    <td>5</td>
-                    <td>Mar 10, 2024</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                </tr>
-
-                <tr class="customer-row">
-                    <td>#3</td>
-                    <td class="customer-name">Michael Brown</td>
-                    <td class="customer-email">michael@email.com</td>
-                    <td class="customer-phone">0734567890</td>
-                    <td>2</td>
-                    <td>Jun 05, 2024</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
+}
+else
+{
+    <div class="text-center mt-4">
+        <p>Please log in to view clients.</p>
     </div>
-</div>
+}
 
 <script>
     function filterCustomers() {
-
         var input = document.getElementById("searchInput");
         var filter = input.value.toUpperCase();
         var table = document.getElementById("customersTable");
         var rows = table.getElementsByClassName("customer-row");
-        var visibleCount = 0;
 
         for (var i = 0; i < rows.length; i++) {
-
             var name = rows[i].getElementsByClassName("customer-name")[0];
             var email = rows[i].getElementsByClassName("customer-email")[0];
             var phone = rows[i].getElementsByClassName("customer-phone")[0];
@@ -112,16 +122,11 @@
             if (nameValue.toUpperCase().indexOf(filter) > -1 ||
                 emailValue.toUpperCase().indexOf(filter) > -1 ||
                 phoneValue.toUpperCase().indexOf(filter) > -1) {
-
                 rows[i].style.display = "";
-                visibleCount++;
-
             } else {
                 rows[i].style.display = "none";
             }
         }
-
-        document.getElementById("customerCount").textContent = visibleCount;
     }
 </script>
 
@@ -129,5 +134,26 @@
     .form-control:focus {
         border-color: #2E7D32;
         box-shadow: 0 0 0 0.2rem rgba(46,125,50,.25);
+    }
+
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background-color: #1976D2;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: 600;
     }
 </style>

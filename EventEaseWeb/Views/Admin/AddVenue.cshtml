@@ -1,0 +1,76 @@
+﻿@model EventEaseWeb.Models.VenueModel
+@{
+    ViewData["Title"] = "Add Venue";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <h1>Add Venue</h1>
+</div>
+
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>Venue Information</h2>
+    </div>
+    <form asp-action="AddVenue" method="post">
+        <div class="mb-3">
+            <label asp-for="VenueName" class="form-label"></label>
+            <input asp-for="VenueName" class="form-control" />
+            <span asp-validation-for="VenueName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Capacity" class="form-label"></label>
+            <input asp-for="Capacity" class="form-control" />
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Image" class="form-label"></label>
+            <input asp-for="Image" class="form-control" placeholder="Enter image URL or path" />
+            <span asp-validation-for="Image" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-action btn-complete">
+            <i class="fas fa-plus me-2"></i> Add Venue
+        </button>
+        <a href="@Url.Action("Venues", "Admin")" class="btn-action btn-view ms-2">
+            <i class="fa-arrow-left me-2" ></i> Back to Clients
+        </a>
+    </form>
+</div>
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-view {
+        background-color: #1976D2;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .ms-2 {
+        margin-left: 8px;
+    }
+
+    .mb-3 {
+        margin-bottom: 16px;
+    }
+</style>

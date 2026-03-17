@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DerekAutoCare.Views.Account
+namespace EventEaseWeb.Views.Admin
 {
-    public class LoginSuccessModel : PageModel
+    public class BookingDetailsModel : PageModel
     {
         public void OnGet()
         {

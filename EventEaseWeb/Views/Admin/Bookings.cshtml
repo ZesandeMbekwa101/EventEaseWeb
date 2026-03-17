@@ -1,61 +1,136 @@
-﻿@{
+﻿@model IEnumerable<EventEaseWeb.Models.BookingModel>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Bookings";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var username = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var isLoggedIn = !string.IsNullOrEmpty(username);
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.querySelector('.alert-success');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s, max-height 0.5s';
+                alert.style.opacity = '0';
+                alert.style.maxHeight = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 4000);
+    </script>
 }
 
 <div class="admin-header">
     <h1>Bookings</h1>
 </div>
 
-<div class="content-card mb-3">
-    <div style="padding:20px;">
-        <input type="text" id="searchBooking" class="form-control"
-               placeholder="🔍 Search by event or venue..."
-               onkeyup="filterBookings()">
-    </div>
-</div>
+@if (isLoggedIn)
+{
+    <div class="mt-3">
+        <a href="@Url.Action("AddBooking", "Admin")" 
+        class="btn-action btn-complete">
+        <i class="fas fa-plus me-2"></i> Add Booking </a> </div>
 
-<div class="content-card">
-    <div class="content-card-header">
-        <h2>All Bookings</h2>
+    <!-- Search Box -->
+    <div class="content-card mb-3">
+        <div style="padding: 20px;">
+            <input type="text" id="searchBooking" class="form-control"
+                   placeholder="🔍 Search by event, venue, or client..."
+                   onkeyup="filterBookings()">
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="admin-table" id="bookingTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Event ID</th>
-                    <th>Venue ID</th>
-                    <th>Booking Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="booking-row">
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>2026-03-20</td>
-                </tr>
-                <tr class="booking-row">
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2026-04-05</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <div class="content-card">
+        <div class="table-responsive">
+            <table class="admin-table" id="bookingTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event</th>
+                        <th>Venue</th>
+                        <th>Client</th>
+                        <th>Booking Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-<script>
-    function filterBookings() {
-        var input = document.getElementById("searchBooking").value.toUpperCase();
-        var rows = document.getElementById("bookingTable").getElementsByClassName("booking-row");
-        for (var i = 0; i < rows.length; i++) {
-            var eventId = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
-            var venueId = rows[i].getElementsByTagName("td")[2].textContent.toUpperCase();
-            rows[i].style.display = (eventId.includes(input) || venueId.includes(input)) ? "" : "none";
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var booking in Model)
+                        {
+                            <tr class="booking-row">
+                                <td>#@booking.BookingID</td>
+                                <td>@booking.Event?.EventName</td>
+                                <td>@booking.Venue?.VenueName</td>
+                                <td>@booking.User?.FirstName @booking.User?.LastName</td>
+                                <td>@booking.BookingDate.ToShortDateString()</td>
+                                <td>
+                                    <a asp-action="BookingDetails" asp-route-id="@booking.BookingID" class="btn btn-primary btn-sm">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No bookings found.</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function filterBookings() {
+            var input = document.getElementById("searchBooking").value.toUpperCase();
+            var rows = document.getElementById("bookingTable").getElementsByClassName("booking-row");
+            for (var i = 0; i < rows.length; i++) {
+                var eventName = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
+                var venueName = rows[i].getElementsByTagName("td")[2].textContent.toUpperCase();
+                var clientName = rows[i].getElementsByTagName("td")[3].textContent.toUpperCase();
+                rows[i].style.display = (eventName.includes(input) || venueName.includes(input) || clientName.includes(input)) ? "" : "none";
+            }
         }
+    </script>
+}
+else
+{
+    <div class="text-center mt-4">
+        <p>Please log in to view bookings.</p>
+    </div>
+}
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
     }
-</script>
+
+    .btn-primary {
+        background-color: #1976D2;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>

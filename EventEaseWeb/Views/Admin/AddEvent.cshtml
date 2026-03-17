@@ -1,0 +1,77 @@
+﻿@model EventEaseWeb.Models.EventModel
+@{
+    ViewData["Title"] = "Add Event";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header"><h1>Add Event</h1></div>
+
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>Event Information</h2>
+    </div>
+    <form asp-action="AddEvent" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="EventName" class="form-label"></label>
+            <input asp-for="EventName" class="form-control" />
+            <span asp-validation-for="EventName" class="text-danger"></span>
+        </div>
+
+       
+        <!-- Date -->
+        <div class="mb-3">
+            <label>Event Date</label>
+            <input asp-for="EventDate" type="date" class="form-control"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="EventDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="VenueID" class="form-label">Select Venue</label>
+            <select asp-for="VenueID" class="form-control" asp-items="ViewBag.Venues">
+                <option value="">-- Select Venue --</option>
+            </select>
+            <span asp-validation-for="VenueID" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-action btn-complete">
+        <i class="fas fa-plus me-2"></i>Add Event
+        </button>
+
+        <a href="@Url.Action("Events", "Admin")" class="btn-action btn-view ms-2">
+            <i class="fas fa-arrow-left me-2"></i> Back to Events
+        </a>
+    </form>
+</div>
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-view {
+        background-color: #1976D2;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+</style>

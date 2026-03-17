@@ -1,0 +1,91 @@
+﻿@model EventEaseWeb.Models.BookingModel
+
+@{
+    ViewData["Title"] = "Add Booking";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Add Booking</h2>
+
+<div class="content-card mb-4">
+    <div class="content-card-header">
+        <h2>Booking Information</h2>
+    </div>
+
+<form asp-action="AddBooking" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!-- Event -->
+    <div class="mb-3">
+        <label>Event</label>
+        <select asp-for="EventID" asp-items="ViewBag.Events" class="form-control">
+            <option value="0">-- Select Event --</option>
+        </select>
+        <span asp-validation-for="EventID" class="text-danger"></span>
+    </div>
+
+    <!-- Venue -->
+    <div class="mb-3">
+        <label>Venue</label>
+        <select asp-for="VenueID" asp-items="ViewBag.Venues" class="form-control">
+            <option value="0">-- Select Venue --</option>
+        </select>
+        <span asp-validation-for="VenueID" class="text-danger"></span>
+    </div>
+
+    <!-- Client -->
+    <div class="mb-3">
+        <label>Client</label>
+        <select asp-for="BookedBy" asp-items="ViewBag.Clients" class="form-control">
+            <option value="0">-- Select Client --</option>
+        </select>
+        <span asp-validation-for="BookedBy" class="text-danger"></span>
+    </div>
+
+    <!-- Date -->
+    <div class="mb-3">
+        <label>Booking Date</label>
+        <input asp-for="BookingDate" type="date" class="form-control"
+               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="BookingDate" class="text-danger"></span>
+    </div>
+
+        <button type="submit" class="btn-action btn-complete">
+            <i class="fas fa-plus me-2"></i>Add Booking
+        </button>
+
+        <a href="@Url.Action("Bookings", "Admin")" class="btn-action btn-view ms-2">
+            <i class="fas fa-arrow-left me-2"></i> Back to Bookings
+        </a>
+</form>
+</div>
+
+<style>
+    .btn-complete {
+        background-color: #2E7D32;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-view {
+        background-color: #1976D2;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .ms-2 {
+        margin-left: 8px;
+    }
+
+    .mb-3 {
+        margin-bottom: 16px;
+    }
+</style>
